@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ff3d7f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Amor em Números</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff4d8d">
+<!-- Favicon emoji ❤️ -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+
+<!-- Fontes -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & VARIÁVEIS
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink:        #ff3d7f;
+  --pink-light:  #ff6eb4;
+  --violet:      #c244ff;
+  --violet-deep: #7b2fff;
+  --indigo:      #4a0fa8;
+  --white:       #ffffff;
+  --glass-bg:    rgba(255,255,255,0.16);
+  --glass-bd:    rgba(255,255,255,0.32);
+  --text-dark:   #2d0a3f;
+  --spring:      cubic-bezier(.34,1.56,.64,1);
+  --ease-out:    cubic-bezier(.22,1,.36,1);
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(155deg,
+    #ff3d7f 0%, #ff6eb4 20%, #d040ff 48%, #7b2fff 75%, #3a0d9e 100%
+  );
+  background-attachment: fixed;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 16px 36px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   PARTÍCULAS DE FUNDO
+═══════════════════════════════════════════════ */
+#particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleDrift linear infinite;
+}
+
+@keyframes particleDrift {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+}
+
+/* Corações flutuantes */
+.bg-hearts { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.bh { position: absolute; animation: floatHeart ease-in-out infinite; }
+.bh svg { display: block; filter: blur(0.5px); }
+.bh:nth-child(1)  { left:6%;  top:8%;  animation-duration:11s; animation-delay:-2s;  opacity:.10; }
+.bh:nth-child(2)  { left:82%; top:4%;  animation-duration:14s; animation-delay:-6s;  opacity:.08; }
+.bh:nth-child(3)  { left:52%; top:28%; animation-duration:9s;  animation-delay:-1s;  opacity:.07; }
+.bh:nth-child(4)  { left:18%; top:52%; animation-duration:16s; animation-delay:-8s;  opacity:.09; }
+.bh:nth-child(5)  { left:88%; top:48%; animation-duration:12s; animation-delay:-4s;  opacity:.06; }
+.bh:nth-child(6)  { left:38%; top:72%; animation-duration:13s; animation-delay:-10s; opacity:.08; }
+.bh:nth-child(7)  { left:68%; top:82%; animation-duration:8s;  animation-delay:-3s;  opacity:.07; }
+.bh:nth-child(8)  { left:12%; top:88%; animation-duration:15s; animation-delay:-7s;  opacity:.09; }
+.bh:nth-child(9)  { left:75%; top:62%; animation-duration:10s; animation-delay:-5s;  opacity:.06; }
+.bh:nth-child(10) { left:30%; top:18%; animation-duration:12s; animation-delay:-9s;  opacity:.08; }
+
+@keyframes floatHeart {
+  0%,100% { transform: translateY(0)    rotate(-10deg) scale(1); }
+  33%      { transform: translateY(-18px) rotate(5deg)  scale(1.06); }
+  66%      { transform: translateY(-8px) rotate(-5deg) scale(0.96); }
+}
+
+/* ═══════════════════════════════════════════════
+   LANGUAGE BAR & SETTINGS BUTTON
+═══════════════════════════════════════════════ */
+.top-bar {
+  position: fixed;
+  top: 14px; right: 14px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+}
+
+.lang-bar {
+  display: flex; gap: 3px;
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 50px;
+  padding: 4px 5px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+}
+.lang-btn {
+  background: transparent; border: none;
+  color: rgba(255,255,255,0.5);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer; padding: 4px 7px;
+  border-radius: 50px;
+  transition: background .2s, color .2s;
+  line-height: 1;
+}
+.lang-btn:hover  { color: rgba(255,255,255,0.85); }
+.lang-btn.active { background: rgba(255,255,255,0.28); color: #fff; }
+
+/* ── Botão de Histórico ── */
+.history-btn {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  transition: background .2s, border-color .2s, transform .15s var(--spring);
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  user-select: none;
+}
+.history-btn:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.35);
+  transform: scale(1.08);
+}
+.history-btn:active { transform: scale(0.95); }
+
+.settings-btn {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  transition: background .2s, border-color .2s;
+  position: relative;
+}
+.settings-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.35); }
+.settings-btn svg {
+  width: 16px; height: 16px;
+  fill: rgba(255,255,255,0.7);
+  transition: fill .2s;
+}
+.settings-btn:hover svg { fill: #fff; }
+
+.cupid-mode-indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: var(--pink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 1;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.3s ease, transform 0.3s var(--spring);
+}
+.cupid-mode-indicator.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+/* ═══════════════════════════════════════════════
+   CARD PRINCIPAL
+═══════════════════════════════════════════════ */
+.card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 400px;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-bd);
+  border-radius: 32px;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  padding: 40px 28px 36px;
+  box-shadow:
+    0 8px 48px rgba(0,0,0,0.28),
+    0 2px 8px rgba(0,0,0,0.12),
+    inset 0 1.5px 0 rgba(255,255,255,0.45),
+    inset 0 -1px 0 rgba(255,255,255,0.08);
+}
+
+/* ── Ícone ── */
+.icon-wrap {
+  width: 72px; height: 72px;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.35), rgba(255,255,255,0.12));
+  border: 2px solid rgba(255,255,255,0.55);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px;
+  box-shadow: 0 4px 24px rgba(255,61,127,0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+  animation: iconPulse 2.8s ease-in-out infinite;
+}
+.icon-wrap svg { width: 34px; height: 34px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+
+@keyframes iconPulse {
+  0%,100% { transform: scale(1);    box-shadow: 0 4px 24px rgba(255,61,127,0.35); }
+  50%      { transform: scale(1.07); box-shadow: 0 6px 36px rgba(255,61,127,0.6); }
+}
+
+/* ── Tipografia ── */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 6.5vw, 32px);
+  font-weight: 900;
+  color: var(--white);
+  text-align: center;
+  letter-spacing: -0.5px;
+  line-height: 1.12;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.2);
+}
+.subtitle {
+  font-size: 13.5px; font-weight: 400;
+  color: rgba(255,255,255,0.78);
+  text-align: center; margin-top: 6px;
+  letter-spacing: 0.15px;
+}
+
+/* ═══════════════════════════════════════════════
+   FORMULÁRIO
+═══════════════════════════════════════════════ */
+.form-section { margin-top: 30px; }
+.field { margin-bottom: 18px; }
+.field label {
+  display: block; font-size: 11.5px; font-weight: 700;
+  color: rgba(255,255,255,0.92); margin-bottom: 7px;
+  letter-spacing: 0.7px; text-transform: uppercase;
+}
+.field input {
+  width: 100%; padding: 14px 20px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.9);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 500;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color .22s, box-shadow .22s, background .22s, transform .15s;
+  -webkit-appearance: none;
+}
+.field input::placeholder { color: #b590c0; font-weight: 400; }
+.field input:focus {
+  border-color: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,1);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.22), 0 4px 20px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+.field input.error {
+  border-color: #ff3d7f;
+  box-shadow: 0 0 0 3px rgba(255,61,127,0.28);
+  animation: shake .35s var(--spring);
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+/* ── Botão principal ── */
+.btn-main {
+  width: 100%; padding: 16px 24px;
+  border-radius: 50px; border: none;
+  background: linear-gradient(135deg, #ff3d7f 0%, #d040ff 55%, #8b44ff 100%);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15.5px; font-weight: 700;
+  letter-spacing: 0.15px;
+  cursor: pointer; margin-top: 6px;
+  transition: transform .2s var(--spring), box-shadow .2s;
+  box-shadow: 0 6px 32px rgba(255,61,127,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  position: relative; overflow: hidden;
+}
+.btn-main::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  border-radius: inherit;
+}
+.btn-main:hover  { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,61,127,0.6); }
+.btn-main:active { transform: scale(0.97); box-shadow: 0 3px 14px rgba(255,61,127,0.35); }
+
+/* ═══════════════════════════════════════════════
+   TELA DE LOADING
+═══════════════════════════════════════════════ */
+#loading-section {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 200px;
+}
+
+.loader-ring {
+  width: 80px; height: 80px;
+  position: relative;
+}
+.loader-ring svg {
+  width: 100%; height: 100%;
+  animation: spinRing 1.2s linear infinite;
+}
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+.loader-arc {
+  fill: none;
+  stroke: url(#loaderGrad);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 180 80;
+}
+.loader-heart {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  animation: heartBeat .8s ease-in-out infinite;
+}
+@keyframes heartBeat {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.22); }
+}
+
+.loading-msg {
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 0.2px;
+  min-height: 22px;
+  animation: fadeMsg .4s ease;
+}
+@keyframes fadeMsg {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.2s steps(4, end) infinite;
+}
+@keyframes dots {
+  0%  { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* ═══════════════════════════════════════════════
+   RESULTADO
+═══════════════════════════════════════════════ */
+#result-section {
+  display: none;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 11px;
+  animation: fadeUp .5s var(--spring) both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.names-display {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.78);
+  letter-spacing: 0.25px; line-height: 1.5;
+}
+.names-display strong { color: #fff; font-weight: 700; }
+
+/* Anel */
+.ring-wrap { position: relative; width: 130px; height: 130px; flex-shrink: 0; }
+.ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg   { fill: none; stroke: rgba(255,255,255,0.12); stroke-width: 9; }
+.ring-fill {
+  fill: none; stroke: url(#ringGrad); stroke-width: 9;
+  stroke-linecap: round; stroke-dasharray: 440; stroke-dashoffset: 440;
+  transition: stroke-dashoffset 1.5s var(--ease-out);
+  filter: drop-shadow(0 0 6px rgba(255,61,127,0.5));
+}
+.ring-glow {
+  fill: none; stroke: rgba(255,100,180,0.18); stroke-width: 18;
+  stroke-dasharray: 440; stroke-dashoffset: 440;
+  transition: stroke-dashoffset 1.5s var(--ease-out);
+  stroke-linecap: round;
+}
+
+.ring-pct {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.ring-pct .num {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px; font-weight: 900; color: #fff;
+  line-height: 1; text-shadow: 0 2px 12px rgba(0,0,0,0.22);
+}
+.ring-pct.pop .num { animation: numPop .4s var(--spring); }
+@keyframes numPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.ring-pct .pct-sym {
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.72);
+}
+
+.result-emoji {
+  font-size: 30px; line-height: 1;
+  animation: bounceIn .55s var(--spring) .2s both;
+}
+@keyframes bounceIn {
+  from { opacity:0; transform:scale(0.3) rotate(-15deg); }
+  to   { opacity:1; transform:scale(1) rotate(0); }
+}
+.result-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; color: #fff;
+  line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.18);
+}
+.result-desc {
+  font-size: 12.5px; color: rgba(255,255,255,0.72);
+  line-height: 1.55; max-width: 276px;
+}
+
+/* Botões de resultado */
+.result-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+
+.btn-share {
+  width: 100%; padding: 13px 20px;
+  border-radius: 50px; border: none;
+  background: linear-gradient(135deg, #ff3d7f 0%, #c244ff 100%);
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 24px rgba(255,61,127,0.45);
+  transition: transform .18s var(--spring), box-shadow .18s;
+  position: relative; overflow: hidden;
+}
+.btn-share::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+}
+.btn-share:hover  { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,61,127,0.58); }
+.btn-share:active { transform: scale(0.97); }
+
+.btn-reset {
+  width: 100%; padding: 11px 20px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  background: transparent; color: rgba(255,255,255,0.85);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: background .18s, border-color .18s;
+}
+.btn-reset:hover  { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.55); }
+.btn-reset:active { background: rgba(255,255,255,0.18); }
+
+/* ═══════════════════════════════════════════════
+   MODAL DE HISTÓRICO
+═══════════════════════════════════════════════ */
+/* Itens dentro do modal de histórico */
+.hmodal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 2px;
+  margin-bottom: 16px;
+}
+.hmodal-list::-webkit-scrollbar { width: 4px; }
+.hmodal-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); border-radius: 4px; }
+.hmodal-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 4px; }
+
+.hmodal-item {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background .15s;
+}
+.hmodal-item:hover { background: rgba(255,255,255,0.16); }
+
+.hmodal-names {
+  flex: 1; min-width: 0;
+  font-size: 14px; font-weight: 600; color: #fff;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hmodal-names small {
+  display: block;
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+.hmodal-right {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.hmodal-pct {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 900; color: #fff;
+}
+.hmodal-emoji { font-size: 20px; }
+
+.hmodal-empty {
+  text-align: center;
+  color: rgba(255,255,255,0.45);
+  font-size: 13px;
+  padding: 28px 0 20px;
+}
+
+/* Botão limpar histórico */
+.btn-clear-history {
+  width: 100%; padding: 12px 20px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255,100,100,0.45);
+  background: rgba(255,60,60,0.12);
+  color: rgba(255,180,180,0.9);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 600;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.btn-clear-history:hover {
+  background: rgba(255,60,60,0.22);
+  border-color: rgba(255,100,100,0.7);
+  color: #fff;
+}
+.btn-clear-history:active { transform: scale(0.98); }
+
+/* Confirmação inline de limpeza */
+.clear-confirm {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  animation: fadeUp .25s var(--ease-out) both;
+}
+.clear-confirm.visible { display: flex; }
+.clear-confirm p {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.65);
+  text-align: center;
+}
+.clear-confirm-btns {
+  display: flex; gap: 8px;
+}
+.btn-confirm-yes {
+  flex: 1; padding: 10px;
+  border-radius: 50px; border: none;
+  background: linear-gradient(135deg, #ff3d3d 0%, #c22 100%);
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: opacity .15s;
+}
+.btn-confirm-yes:hover { opacity: .85; }
+.btn-confirm-no {
+  flex: 1; padding: 10px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent; color: rgba(255,255,255,0.8);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: background .15s;
+}
+.btn-confirm-no:hover { background: rgba(255,255,255,0.10); }
+
+/* ═══════════════════════════════════════════════
+   CONFETES
+═══════════════════════════════════════════════ */
+#confetti-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 999;
+  width: 100%; height: 100%;
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: rgba(20,5,40,0.93);
+  color: #fff; font-size: 13.5px; font-weight: 500;
+  padding: 11px 22px; border-radius: 50px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity .28s, transform .28s;
+  z-index: 9999;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  max-width: calc(100vw - 32px);
+  text-align: center; white-space: normal;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ═══════════════════════════════════════════════
+   MODAL DE CONFIGURAÇÕES (MODO CUPIDO)
+═══════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-bd);
+  border-radius: 24px;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  padding: 28px;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.12);
+  width: 90%;
+  max-width: 380px;
+  transform: translateY(20px) scale(0.95);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s var(--spring);
+  color: #fff;
+}
+.modal-overlay.visible .modal-content {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.modal-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.modal-field {
+  margin-bottom: 20px;
+}
+.modal-field label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,0.9);
+}
+.modal-field p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 4px;
+}
+
+/* Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.3);
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--pink);
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.9);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color .22s, box-shadow .22s, background .22s;
+}
+.modal-input:focus {
+  border-color: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,1);
+  box-shadow: 0 0 0 3px rgba(255,61,127,0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+.modal-btn {
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .1s;
+}
+.modal-btn-cancel {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.8);
+}
+.modal-btn-cancel:hover {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+.modal-btn-save {
+  background: linear-gradient(135deg, #ff3d7f 0%, #c244ff 100%);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(255,61,127,0.3);
+}
+.modal-btn-save:hover {
+  box-shadow: 0 6px 20px rgba(255,61,127,0.4);
+  transform: translateY(-1px);
+}
+.modal-btn:active {
+  transform: scale(0.98);
+}
+
+
+/* ═══════════════════════════════════════════════
+   RODAPÉ
+═══════════════════════════════════════════════ */
+.footer {
+  position: relative; z-index: 1;
+  margin-top: 20px;
+  font-size: 11.5px; font-weight: 400;
+  color: rgba(255,255,255,0.45);
+  text-align: center; letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVIDADE EXTRA
+═══════════════════════════════════════════════ */
+@media (max-height: 680px) {
+  body { padding: 56px 16px 24px; }
+  .card { padding: 28px 22px 28px; }
+  .icon-wrap { width: 58px; height: 58px; margin-bottom: 16px; }
+  h1 { font-size: 22px; }
+  .form-section { margin-top: 22px; }
+  .field { margin-bottom: 14px; }
+  #result-section { gap: 8px; }
+  .ring-wrap { width: 110px; height: 110px; }
+}
+@media (max-width: 360px) {
+  .card { padding: 32px 18px 28px; border-radius: 24px; }
+  h1 { font-size: 22px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── Top bar (Language, History & Settings) ── -->
+<div class="top-bar">
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button class="lang-btn active" onclick="setLang('pt')" id="lb-pt">PT</button>
+    <button class="lang-btn"        onclick="setLang('en')" id="lb-en">EN</button>
+    <button class="lang-btn"        onclick="setLang('es')" id="lb-es">ES</button>
+    <button class="lang-btn"        onclick="setLang('fr')" id="lb-fr">FR</button>
+  </div>
+  <!-- ALTERAÇÃO 1: Botão de histórico com emoji 📜 -->
+  <button class="history-btn" onclick="abrirHistoricoModal()" aria-label="Histórico">📜</button>
+  <button class="settings-btn" onclick="openSettingsModal()" aria-label="Configurações">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/>
+      <path d="M19.4 12.97a.75.75 0 00-.01-1.94l1.43-1.43a.75.75 0 00-.53-1.28l-2.06-.35a.75.75 0 00-.6-.44l-.35-2.06a.75.75 0 00-1.28-.53l-1.43 1.43a.75.75 0 00-1.94-.01l-.35-2.06a.75.75 0 00-1.28-.53l-2.06.35a.75.75 0 00-.6.44l-.35 2.06a.75.75 0 00-1.94.01l-1.43-1.43a.75.75 0 00-1.28.53l.35 2.06a.75.75 0 00-.44.6l-2.06.35a.75.75 0 00-.53 1.28l1.43 1.43a.75.75 0 00-.01 1.94l-1.43 1.43a.75.75 0 00.53 1.28l2.06.35a.75.75 0 00.6.44l.35 2.06a.75.75 0 001.28.53l1.43-1.43a.75.75 0 001.94.01l.35 2.06a.75.75 0 001.28.53l2.06-.35a.75.75 0 00.6-.44l.35-2.06a.75.75 0 00.44-.6z"/>
+    </svg>
+    <span class="cupid-mode-indicator" id="cupid-mode-indicator">💘</span>
+  </button>
+</div>
+
+<!-- ── Partículas ── -->
+<div id="particles"></div>
+
+<!-- ── Corações de fundo ── -->
+<div class="bg-hearts" aria-hidden="true">
+  <div class="bh"><svg viewBox="0 0 40 36" width="44" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="30" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="20" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="38" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="26" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="18" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="34" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="22" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="16" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+  <div class="bh"><svg viewBox="0 0 40 36" width="28" fill="rgba(255,255,255,1)"><path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/></svg></div>
+</div>
+
+<!-- Canvas de confetes -->
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<!-- ══════════════ CARD PRINCIPAL ══════════════ -->
+<div class="card" role="main">
+
+  <!-- Ícone de coração -->
+  <div class="icon-wrap" aria-hidden="true">
+    <svg viewBox="0 0 40 36" fill="white">
+      <path d="M20 34S2 22 2 11a9 9 0 0118 0 9 9 0 0118 0c0 11-18 23-18 23z"/>
+    </svg>
+  </div>
+
+  <h1 id="i-title"></h1>
+  <p class="subtitle" id="i-subtitle"></p>
+
+  <!-- ── Formulário ── -->
+  <div class="form-section" id="form-section">
+    <div class="field">
+      <label for="name1" id="i-label1"></label>
+      <input type="text" id="name1" autocomplete="off" maxlength="40" inputmode="text">
+    </div>
+    <div class="field">
+      <label for="name2" id="i-label2"></label>
+      <input type="text" id="name2" autocomplete="off" maxlength="40" inputmode="text">
+    </div>
+    <button class="btn-main" id="btn-calc" onclick="iniciarCalculo()"></button>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div id="loading-section">
+    <div class="loader-ring">
+      <svg viewBox="0 0 80 80">
+        <defs>
+          <linearGradient id="loaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#ff3d7f"/>
+            <stop offset="100%" stop-color="#c244ff"/>
+          </linearGradient>
+        </defs>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+        <path class="loader-arc" d="M40 6 A34 34 0 0 1 74 40"/>
+      </svg>
+      <div class="loader-heart">💗</div>
+    </div>
+    <p class="loading-msg" id="loading-msg"><span id="loading-text"></span><span class="loading-dots"></span></p>
+  </div>
+
+  <!-- ── Resultado ── -->
+  <div id="result-section">
+    <p class="names-display" id="names-display"></p>
+
+    <div class="ring-wrap" aria-label="Porcentagem de compatibilidade">
+      <svg viewBox="0 0 160 160">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#ff3d7f"/>
+            <stop offset="50%"  stop-color="#e040fb"/>
+            <stop offset="100%" stop-color="#7b2fff"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-bg"   cx="80" cy="80" r="70"/>
+        <circle class="ring-glow" id="ring-glow" cx="80" cy="80" r="70"/>
+        <circle class="ring-fill" id="ring-fill" cx="80" cy="80" r="70"/>
+      </svg>
+      <div class="ring-pct" id="ring-pct">
+        <span class="num" id="pct-num">0</span>
+        <span class="pct-sym">%</span>
+      </div>
+    </div>
+
+    <div class="result-emoji" id="result-emoji"></div>
+    <div class="result-label" id="result-label"></div>
+    <div class="result-desc"  id="result-desc"></div>
+
+    <div class="result-actions">
+      <button class="btn-share" id="btn-share" onclick="compartilhar()"></button>
+      <button class="btn-reset" id="btn-reset" onclick="resetar()"></button>
+    </div>
+  </div>
+
+</div><!-- /card -->
+
+<!-- ══════════════ MODAL DE HISTÓRICO ══════════════ -->
+<div class="modal-overlay" id="history-modal-overlay" onclick="closeHistoryModal(event)">
+  <div class="modal-content" id="history-modal-content" onclick="event.stopPropagation()">
+    <!-- Cabeçalho -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h2 style="margin:0;font-size:20px;">📜 <span id="hmodal-title"></span></h2>
+      <button onclick="closeHistoryModal()" aria-label="Fechar"
+        style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:50%;
+               width:30px;height:30px;color:#fff;font-size:16px;cursor:pointer;display:flex;
+               align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;">✕</button>
+    </div>
+
+    <!-- Lista -->
+    <div class="hmodal-list" id="hmodal-list"></div>
+
+    <!-- Rodapé do modal -->
+    <button class="btn-clear-history" id="btn-clear-history" onclick="pedirLimparHistorico()"></button>
+    <div class="clear-confirm" id="clear-confirm">
+      <p id="clear-confirm-msg"></p>
+      <div class="clear-confirm-btns">
+        <button class="btn-confirm-yes" id="btn-confirm-yes" onclick="confirmarLimpar()"></button>
+        <button class="btn-confirm-no"  id="btn-confirm-no"  onclick="cancelarLimpar()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rodapé -->
+<p class="footer" id="i-footer"></p>
+
+<!-- Toast -->
+<div id="toast" role="alert" aria-live="polite"></div>
+
+<!-- ══════════════ MODAL DE CONFIGURAÇÕES ══════════════ -->
+<div class="modal-overlay" id="settings-modal-overlay" onclick="closeSettingsModal(event)">
+  <div class="modal-content" id="settings-modal-content" onclick="event.stopPropagation()">
+    <h2 id="modal-title"></h2>
+
+    <div class="modal-field">
+      <label for="cupid-mode-toggle">
+        <span id="modal-cupid-mode-label"></span>
+        <label class="switch">
+          <input type="checkbox" id="cupid-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </label>
+      <p id="modal-cupid-mode-desc"></p>
+    </div>
+
+    <div class="modal-field">
+      <label for="custom-percentage" id="modal-custom-percentage-label"></label>
+      <input type="number" id="custom-percentage" class="modal-input" min="0" max="100" value="50">
+      <p id="modal-custom-percentage-desc"></p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-cancel" onclick="closeSettingsModal()" id="modal-btn-cancel"></button>
+      <button class="modal-btn modal-btn-save" onclick="saveSettings()" id="modal-btn-save"></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ════════════════════════════════════════
+   i18n — TRADUÇÕES
+════════════════════════════════════════ */
+const LANGS = {
+  pt: {
+    htmlLang: 'pt-BR',
+    title:    'Amor em Números',
+    subtitle: 'Descubra a sua compatibilidade',
+    label1: 'Seu nome', label2: 'Nome do crush',
+    ph1: 'Ex: Ana', ph2: 'Ex: Lucas',
+    btnCalc:  'Descobrir Compatibilidade 💕',
+    btnShare: 'Compartilhar Resultado 💌',
+    btnReset: 'Tentar outros nomes ↺',
+    footer:   '100% offline',
+    toastCopy: '✅ Copiado para a área de transferência!',
+    historyTitle: 'Últimos Resultados',
+    historyEmpty: 'Nenhum resultado ainda.',
+    historyClear: '🗑 Limpar Histórico',
+    historyConfirmMsg: 'Apagar todos os registros?',
+    historyConfirmYes: 'Apagar tudo',
+    historyConfirmNo: 'Cancelar',
+    loadingMsgs: ['Analisando nomes', 'Consultando os astros', 'Calculando compatibilidade'],
+    shareText: (n1, n2, pct, label) =>
+`💕 ${n1} ❤️ ${n2}
+
+Compatibilidade:
+${pct}%
+
+${label}
+
+Descubra a sua também no Amor em Números! ✨`,
+    results: [
+      { min:90, emoji:'🔥', label:'Chama Eterna!',      desc:'Vocês foram feitos um pro outro. Essa compatibilidade é rara — não deixem escapar!' },
+      { min:75, emoji:'💞', label:'Almas Gêmeas!',       desc:'A conexão de vocês é inegável. O universo claramente aprova esse match!' },
+      { min:55, emoji:'✨', label:'Tem Química!',         desc:'Há faíscas entre vocês! Com dedicação, essa história pode ser linda.' },
+      { min:35, emoji:'🌱', label:'Vale Cultivar',        desc:'Um amor que pode crescer com tempo e carinho. Dê uma chance!' },
+      { min: 0, emoji:'🫂', label:'Melhor Como Amigos…', desc:'Os astros sugerem cautela, mas quem sabe com uma boa conversa? 😉' },
+    ],
+    modal: {
+      title: 'Configurações',
+      cupidModeLabel: 'Ativar Modo Cupido',
+      cupidModeDesc: 'Força o resultado da compatibilidade para um valor personalizado.',
+      customPercentageLabel: 'Porcentagem personalizada (0-100)',
+      customPercentageDesc: 'Será usada quando o Modo Cupido estiver ativo.',
+      btnCancel: 'Cancelar',
+      btnSave: 'Salvar',
+      toastSaved: '✅ Configurações salvas!',
+    }
+  },
+  en: {
+    htmlLang: 'en',
+    title:    'Love in Numbers',
+    subtitle: 'Discover your compatibility',
+    label1: 'Your name', label2: "Crush's name",
+    ph1: 'Ex: Anna', ph2: 'Ex: Lucas',
+    btnCalc:  'Discover Compatibility 💕',
+    btnShare: 'Share Result 💌',
+    btnReset: 'Try other names ↺',
+    footer:   '100% offline',
+    toastCopy: '✅ Copied to clipboard!',
+    historyTitle: 'Recent Results',
+    historyEmpty: 'No results yet.',
+    historyClear: '🗑 Clear History',
+    historyConfirmMsg: 'Delete all records?',
+    historyConfirmYes: 'Delete all',
+    historyConfirmNo: 'Cancel',
+    loadingMsgs: ['Analyzing names', 'Consulting the stars', 'Calculating compatibility'],
+    shareText: (n1, n2, pct, label) =>
+`💕 ${n1} ❤️ ${n2}
+
+Compatibility:
+${pct}%
+
+${label}
+
+Find yours too on Love in Numbers! ✨`,
+    results: [
+      { min:90, emoji:'🔥', label:'Eternal Flame!',     desc:"You were made for each other. This compatibility is rare — don't let it slip away!" },
+      { min:75, emoji:'💞', label:'Soulmates!',          desc:'Your connection is undeniable. The universe clearly approves this match!' },
+      { min:55, emoji:'✨', label:'Great Chemistry!',    desc:'There are sparks between you! With dedication, this story could be beautiful.' },
+      { min:35, emoji:'🌱', label:'Worth Nurturing',     desc:'A love that can grow with time and care. Give it a chance!' },
+      { min: 0, emoji:'🫂', label:'Better as Friends…', desc:'The stars suggest caution — but who knows with a good conversation? 😉' },
+    ],
+    modal: {
+      title: 'Settings',
+      cupidModeLabel: 'Activate Cupid Mode',
+      cupidModeDesc: 'Forces the compatibility result to a custom value.',
+      customPercentageLabel: 'Custom percentage (0-100)',
+      customPercentageDesc: 'Will be used when Cupid Mode is active.',
+      btnCancel: 'Cancel',
+      btnSave: 'Save',
+      toastSaved: '✅ Settings saved!',
+    }
+  },
+  es: {
+    htmlLang: 'es',
+    title:    'Amor en Números',
+    subtitle: 'Descubre tu compatibilidad',
+    label1: 'Tu nombre', label2: 'Nombre del crush',
+    ph1: 'Ej: Ana', ph2: 'Ej: Lucas',
+    btnCalc:  'Descubrir Compatibilidad 💕',
+    btnShare: 'Compartir Resultado 💌',
+    btnReset: 'Probar otros nombres ↺',
+    footer:   '100% offline',
+    toastCopy: '✅ ¡Copiado al portapapeles!',
+    historyTitle: 'Últimos Resultados',
+    historyEmpty: 'Aún no hay resultados.',
+    historyClear: '🗑 Limpiar Historial',
+    historyConfirmMsg: '¿Borrar todos los registros?',
+    historyConfirmYes: 'Borrar todo',
+    historyConfirmNo: 'Cancelar',
+    loadingMsgs: ['Analizando nombres', 'Consultando los astros', 'Calculando compatibilidad'],
+    shareText: (n1, n2, pct, label) =>
+`💕 ${n1} ❤️ ${n2}
+
+Compatibilidad:
+${pct}%
+
+${label}
+
+¡Descubre la tuya en Amor en Números! ✨`,
+    results: [
+      { min:90, emoji:'🔥', label:'¡Llama Eterna!',      desc:'¡Fueron hechos el uno para el otro. Esta compatibilidad es rara — no la dejen escapar!' },
+      { min:75, emoji:'💞', label:'¡Almas Gemelas!',      desc:'¡Su conexión es innegable. El universo claramente aprueba este match!' },
+      { min:55, emoji:'✨', label:'¡Hay Química!',        desc:'¡Hay chispas entre ustedes! Con dedicación, esta historia puede ser hermosa.' },
+      { min:35, emoji:'🌱', label:'Vale la Pena',         desc:'Un amor que puede crecer con tiempo y cariño. ¡Dale una oportunidad!' },
+      { min: 0, emoji:'🫂', label:'Mejor como Amigos…',  desc:'Los astros sugieren cautela, ¿pero quién sabe con una buena conversación? 😉' },
+    ],
+    modal: {
+      title: 'Configuración',
+      cupidModeLabel: 'Activar Modo Cupido',
+      cupidModeDesc: 'Fuerza el resultado de compatibilidad a un valor personalizado.',
+      customPercentageLabel: 'Porcentaje personalizado (0-100)',
+      customPercentageDesc: 'Se utilizará cuando el Modo Cupido esté activo.',
+      btnCancel: 'Cancelar',
+      btnSave: 'Guardar',
+      toastSaved: '✅ ¡Configuración guardada!',
+    }
+  },
+  fr: {
+    htmlLang: 'fr',
+    title:    'Amour en Chiffres',
+    subtitle: 'Découvrez votre compatibilité',
+    label1: 'Votre prénom', label2: 'Prénom du crush',
+    ph1: 'Ex : Anna', ph2: 'Ex : Lucas',
+    btnCalc:  'Découvrir la Compatibilité 💕',
+    btnShare: 'Partager le Résultat 💌',
+    btnReset: "Essayer d'autres prénoms ↺",
+    footer:   '100 % hors ligne',
+    toastCopy: '✅ Copié dans le presse-papiers !',
+    historyTitle: 'Derniers Résultats',
+    historyEmpty: 'Aucun résultat pour le moment.',
+    historyClear: '🗑 Effacer l\'historique',
+    historyConfirmMsg: 'Supprimer tous les enregistrements ?',
+    historyConfirmYes: 'Tout supprimer',
+    historyConfirmNo: 'Annuler',
+    loadingMsgs: ['Analyse des prénoms', 'Consultation des astres', 'Calcul de compatibilité'],
+    shareText: (n1, n2, pct, label) =>
+`💕 ${n1} ❤️ ${n2}
+
+Compatibilité :
+${pct} %
+
+${label}
+
+Découvrez la vôtre sur Amour en Chiffres ! ✨`,
+    results: [
+      { min:90, emoji:'🔥', label:'Flamme Éternelle !', desc:"Vous étiez faits l'un pour l'autre. Cette compatibilité est rare — ne la laissez pas partir !" },
+      { min:75, emoji:'💞', label:'Âmes Sœurs !',        desc:"Votre connexion est indéniable. L'univers approuve clairement ce match !" },
+      { min:55, emoji:'✨', label:'Grande Chimie !',      desc:"Il y a des étincelles entre vous ! Avec de l'engagement, cette histoire pourrait être belle." },
+      { min:35, emoji:'🌱', label:'Ça vaut le coup',     desc:'Un amour qui peut grandir avec le temps et la tendresse. Donnez-lui une chance !' },
+      { min: 0, emoji:'🫂', label:'Plutôt Amis…',        desc:'Les astres suggèrent la prudence, mais qui sait avec une bonne conversation ? 😉' },
+    ],
+    modal: {
+      title: 'Paramètres',
+      cupidModeLabel: 'Activer le mode Cupidon',
+      cupidModeDesc: 'Force le résultat de compatibilité à une valeur personnalisée.',
+      customPercentageLabel: 'Pourcentage personnalisé (0-100)',
+      customPercentageDesc: 'Sera utilisé lorsque le mode Cupidon est actif.',
+      btnCancel: 'Annuler',
+      btnSave: 'Enregistrer',
+      toastSaved: '✅ Paramètres enregistrés !',
+    }
+  },
+};
+
+/* ════════════════════════════════════════
+   ESTADO GLOBAL
+════════════════════════════════════════ */
+let currentLang   = 'pt';
+let currentResult = null;
+
+// Modo Cupido
+let cupidModeEnabled = false;
+let customPercentage = 50;
+
+/* ════════════════════════════════════════
+   ALGORITMO DE COMPATIBILIDADE (v2)
+   Hash FNV-1a 32-bit: determinista,
+   distribui bem entre 0-100
+════════════════════════════════════════ */
+function calcularPorcentagem(a, b) {
+  if (cupidModeEnabled) {
+    return customPercentage;
+  }
+
+  const parts = [a.trim().toLowerCase(), b.trim().toLowerCase()].sort();
+  const str   = parts[0] + '\x00' + parts[1];
+
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h  = Math.imul(h, 16777619) >>> 0;
+  }
+
+  return h % 101;
+}
+
+/* ════════════════════════════════════════
+   i18n
+════════════════════════════════════════ */
+function setLang(code) {
+  if (!LANGS[code]) return;
+  currentLang = code;
+  const t = LANGS[code];
+
+  document.documentElement.lang      = t.htmlLang;
+  document.getElementById('i-title').textContent    = t.title;
+  document.getElementById('i-subtitle').textContent = t.subtitle;
+  document.getElementById('i-label1').textContent   = t.label1;
+  document.getElementById('i-label2').textContent   = t.label2;
+  document.getElementById('name1').placeholder      = t.ph1;
+  document.getElementById('name2').placeholder      = t.ph2;
+  document.getElementById('btn-calc').textContent   = t.btnCalc;
+  document.getElementById('btn-share').textContent  = t.btnShare;
+  document.getElementById('btn-reset').textContent  = t.btnReset;
+  document.getElementById('i-footer').textContent   = t.footer;
+  document.getElementById('hmodal-title').textContent        = t.historyTitle;
+  document.getElementById('btn-clear-history').textContent   = t.historyClear;
+  document.getElementById('clear-confirm-msg').textContent   = t.historyConfirmMsg;
+  document.getElementById('btn-confirm-yes').textContent     = t.historyConfirmYes;
+  document.getElementById('btn-confirm-no').textContent      = t.historyConfirmNo;
+
+  // Modal texts
+  document.getElementById('modal-title').textContent = t.modal.title;
+  document.getElementById('modal-cupid-mode-label').textContent = t.modal.cupidModeLabel;
+  document.getElementById('modal-cupid-mode-desc').textContent = t.modal.cupidModeDesc;
+  document.getElementById('modal-custom-percentage-label').textContent = t.modal.customPercentageLabel;
+  document.getElementById('modal-custom-percentage-desc').textContent = t.modal.customPercentageDesc;
+  document.getElementById('modal-btn-cancel').textContent = t.modal.btnCancel;
+  document.getElementById('modal-btn-save').textContent = t.modal.btnSave;
+
+  ['pt','en','es','fr'].forEach(l =>
+    document.getElementById('lb-' + l).classList.toggle('active', l === code)
+  );
+
+  // Re-renderiza resultado se visível
+  const rs = document.getElementById('result-section');
+  if (rs.style.display === 'flex' && currentResult) {
+    const res = getResult(currentResult.pct);
+    document.getElementById('result-emoji').textContent = res.emoji;
+    document.getElementById('result-label').textContent = res.label;
+    document.getElementById('result-desc').textContent  = res.desc;
+  }
+
+  updateCupidModeIndicator();
+}
+
+function getResult(pct) {
+  const tiers = LANGS[currentLang].results;
+  return tiers.find(r => pct >= r.min) || tiers[tiers.length - 1];
+}
+
+/* ════════════════════════════════════════
+   ÁUDIO (Web Audio API — sem arquivos externos)
+════════════════════════════════════════ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, type, duration, vol = 0.12, delay = 0) {
+  try {
+    const ctx  = getAudioCtx();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type      = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + duration + 0.05);
+  } catch(e) {}
+}
+
+function somCalculo() {
+  playTone(440, 'sine', 0.18, 0.10, 0.00);
+  playTone(554, 'sine', 0.18, 0.10, 0.18);
+  playTone(659, 'sine', 0.25, 0.10, 0.36);
+}
+
+function somEspecial() {
+  const notas = [523, 659, 784, 1047];
+  notas.forEach((f, i) => playTone(f, 'sine', 0.4, 0.09, i * 0.1));
+  setTimeout(() => playTone(1047, 'triangle', 0.6, 0.07), 550);
+}
+
+function somClique() {
+  playTone(880, 'sine', 0.08, 0.06);
+}
+
+/* ════════════════════════════════════════
+   CONFETES
+════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx2d  = canvas.getContext('2d');
+  let pieces   = [];
+  let rafId    = null;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const COLORS = ['#ff3d7f','#ff6eb4','#c244ff','#7b2fff','#ffcc00','#00e5ff','#ffffff','#ff9a3c'];
+
+  function createPiece(x) {
+    return {
+      x,
+      y: -12,
+      r: Math.random() * 7 + 4,
+      d: Math.random() * 10 + 4,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      tilt: Math.random() * 10 - 5,
+      tiltSpeed: Math.random() * 0.1 + 0.04,
+      tiltAngle: 0,
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 3 + 2,
+      alpha: 1,
+      shape: Math.random() < 0.5 ? 'rect' : 'circle',
+    };
+  }
+
+  function draw() {
+    ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx2d.save();
+      ctx2d.globalAlpha = p.alpha;
+      ctx2d.fillStyle   = p.color;
+      ctx2d.translate(p.x, p.y);
+      ctx2d.rotate((p.tiltAngle * Math.PI) / 180);
+      if (p.shape === 'rect') {
+        ctx2d.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 1.6);
+      } else {
+        ctx2d.beginPath();
+        ctx2d.arc(0, 0, p.r / 2, 0, Math.PI * 2);
+        ctx2d.fill();
+      }
+      ctx2d.restore();
+    });
+  }
+
+  function update() {
+    pieces = pieces.filter(p => p.alpha > 0.02 && p.y < canvas.height + 30);
+    pieces.forEach(p => {
+      p.y          += p.vy;
+      p.x          += p.vx;
+      p.tiltAngle  += p.tiltSpeed;
+      p.vy         *= 1.005;
+      if (p.y > canvas.height * 0.6) p.alpha -= 0.012;
+    });
+    draw();
+    if (pieces.length > 0) rafId = requestAnimationFrame(update);
+    else ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  window.lançarConfetes = function() {
+    if (rafId) cancelAnimationFrame(rafId);
+    pieces = [];
+    const total = 140;
+    const w = canvas.width;
+    for (let i = 0; i < total; i++) {
+      setTimeout(() => pieces.push(createPiece(Math.random() * w)), i * 12);
+    }
+    rafId = requestAnimationFrame(update);
+  };
+})();
+
+/* ════════════════════════════════════════
+   PARTÍCULAS DE FUNDO
+════════════════════════════════════════ */
+(function() {
+  const container = document.getElementById('particles');
+  const colors = ['rgba(255,61,127,0.5)','rgba(194,68,255,0.5)','rgba(123,47,255,0.5)','rgba(255,110,180,0.4)'];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    const size = Math.random() * 8 + 3;
+    el.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random() * 100}%;
+      background:${colors[Math.floor(Math.random() * colors.length)]};
+      animation-duration:${Math.random() * 14 + 8}s;
+      animation-delay:-${Math.random() * 14}s;
+    `;
+    container.appendChild(el);
+  }
+})();
+
+/* ════════════════════════════════════════
+   LOADING
+════════════════════════════════════════ */
+function mostrarLoading(msgs) {
+  document.getElementById('form-section').style.display    = 'none';
+  document.getElementById('result-section').style.display  = 'none';
+  document.getElementById('loading-section').style.display = 'flex';
+
+  const el = document.getElementById('loading-text');
+  let idx  = 0;
+  el.textContent = msgs[idx];
+
+  const iv = setInterval(() => {
+    idx++;
+    if (idx < msgs.length) {
+      el.textContent = msgs[idx];
+      el.parentElement.style.animation = 'none';
+      void el.parentElement.offsetWidth;
+      el.parentElement.style.animation = '';
+    } else {
+      clearInterval(iv);
+    }
+  }, 700);
+
+  return iv;
+}
+
+function ocultarLoading() {
+  document.getElementById('loading-section').style.display = 'none';
+}
+
+/* ════════════════════════════════════════
+   ANIMAÇÕES DO ANEL
+════════════════════════════════════════ */
+function animarAnel(pct) {
+  const circum = 2 * Math.PI * 70;
+  const offset = circum * (1 - pct / 100);
+  setTimeout(() => {
+    document.getElementById('ring-fill').style.strokeDashoffset = offset;
+    document.getElementById('ring-glow').style.strokeDashoffset = offset;
+  }, 80);
+}
+
+function animarNumero(alvo, duracao) {
+  const el    = document.getElementById('pct-num');
+  const wrap  = document.getElementById('ring-pct');
+  const t0    = performance.now();
+  function step(now) {
+    const t    = Math.min((now - t0) / duracao, 1);
+    const ease = 1 - Math.pow(1 - t, 4);
+    const cur  = Math.round(ease * alvo);
+    el.textContent = cur;
+    if (t < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.textContent = alvo;
+      wrap.classList.remove('pop');
+      void wrap.offsetWidth;
+      wrap.classList.add('pop');
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+/* ════════════════════════════════════════
+   CÁLCULO PRINCIPAL
+════════════════════════════════════════ */
+function iniciarCalculo() {
+  const n1 = document.getElementById('name1').value.trim();
+  const n2 = document.getElementById('name2').value.trim();
+  const i1 = document.getElementById('name1');
+  const i2 = document.getElementById('name2');
+
+  i1.classList.remove('error');
+  i2.classList.remove('error');
+
+  let ok = true;
+  if (!n1) { i1.classList.add('error'); ok = false; }
+  if (!n2) { i2.classList.add('error'); ok = false; }
+  if (!ok) { i1.focus(); return; }
+
+  somClique();
+
+  const msgs = LANGS[currentLang].loadingMsgs;
+  mostrarLoading(msgs);
+
+  const pct = calcularPorcentagem(n1, n2);
+  const res = getResult(pct);
+
+  setTimeout(() => {
+    ocultarLoading();
+    exibirResultado(n1, n2, pct, res);
+  }, 1400);
+}
+
+function exibirResultado(n1, n2, pct, res) {
+  currentResult = { n1, n2, pct };
+
+  document.getElementById('names-display').innerHTML =
+    `<strong>${n1}</strong> ❤️ <strong>${n2}</strong>`;
+  document.getElementById('result-emoji').textContent = res.emoji;
+  document.getElementById('result-label').textContent = res.label;
+  document.getElementById('result-desc').textContent  = res.desc;
+
+  const ring  = document.getElementById('ring-fill');
+  const glow  = document.getElementById('ring-glow');
+  ring.style.transition = 'none';
+  glow.style.transition = 'none';
+  ring.style.strokeDashoffset = '440';
+  glow.style.strokeDashoffset = '440';
+  document.getElementById('pct-num').textContent = '0';
+  document.getElementById('ring-pct').classList.remove('pop');
+
+  document.getElementById('result-section').style.display = 'flex';
+
+  requestAnimationFrame(() => {
+    ring.style.transition = '';
+    glow.style.transition = '';
+    animarAnel(pct);
+    animarNumero(pct, 1300);
+  });
+
+  if (pct >= 90) {
+    somEspecial();
+    setTimeout(lançarConfetes, 400);
+  } else {
+    somCalculo();
+  }
+
+  salvarHistorico(n1, n2, pct, res.emoji);
+}
+
+/* ════════════════════════════════════════
+   HISTÓRICO — MODAL (localStorage)
+════════════════════════════════════════ */
+const HISTORY_KEY = 'amor-numeros-history';
+
+function carregarHistorico() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+function salvarHistorico(n1, n2, pct, emoji) {
+  const list = carregarHistorico();
+  // Evita duplicata consecutiva exata
+  if (list.length && list[0].n1 === n1 && list[0].n2 === n2) return;
+  list.unshift({ n1, n2, pct, emoji, ts: Date.now() });
+  const trimmed = list.slice(0, 10);
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed)); } catch(e) {}
+}
+
+function renderModalHistorico() {
+  const list = carregarHistorico();
+  const ul   = document.getElementById('hmodal-list');
+  const t    = LANGS[currentLang];
+
+  ul.innerHTML = '';
+
+  if (list.length === 0) {
+    ul.innerHTML = `<p class="hmodal-empty">${t.historyEmpty}</p>`;
+    document.getElementById('btn-clear-history').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('btn-clear-history').style.display = '';
+
+  list.forEach(item => {
+    const res  = getResultFor(item.pct);
+    const date = new Date(item.ts).toLocaleDateString();
+    const div  = document.createElement('div');
+    div.className = 'hmodal-item';
+    div.innerHTML = `
+      <div class="hmodal-names">
+        ${escapeHtml(item.n1)} ❤️ ${escapeHtml(item.n2)}
+        <small>${res.label} · ${date}</small>
+      </div>
+      <div class="hmodal-right">
+        <span class="hmodal-pct">${item.pct}%</span>
+        <span class="hmodal-emoji">${item.emoji || res.emoji}</span>
+      </div>
+    `;
+    ul.appendChild(div);
+  });
+}
+
+function getResultFor(pct) {
+  const tiers = LANGS[currentLang].results;
+  return tiers.find(r => pct >= r.min) || tiers[tiers.length - 1];
+}
+
+/* Abrir / fechar modal de histórico */
+function abrirHistoricoModal() {
+  somClique();
+  cancelarLimpar(); // fecha confirmação se estiver aberta
+  renderModalHistorico();
+  document.getElementById('history-modal-overlay').classList.add('visible');
+}
+
+function closeHistoryModal(event) {
+  if (event && event.target.id !== 'history-modal-overlay') return;
+  document.getElementById('history-modal-overlay').classList.remove('visible');
+}
+
+/* Limpar histórico */
+function pedirLimparHistorico() {
+  const cc = document.getElementById('clear-confirm');
+  cc.classList.add('visible');
+}
+function cancelarLimpar() {
+  const cc = document.getElementById('clear-confirm');
+  cc.classList.remove('visible');
+}
+function confirmarLimpar() {
+  try { localStorage.removeItem(HISTORY_KEY); } catch(e) {}
+  cancelarLimpar();
+  renderModalHistorico();
+}
+
+/* ════════════════════════════════════════
+   COMPARTILHAR
+════════════════════════════════════════ */
+async function compartilhar() {
+  if (!currentResult) return;
+  const { n1, n2, pct } = currentResult;
+  const t     = LANGS[currentLang];
+  const res   = getResult(pct);
+  const texto = t.shareText(n1, n2, pct, res.emoji + ' ' + res.label);
+
+  if (navigator.share) {
+    try { await navigator.share({ title: t.title, text: texto }); } catch(e) {}
+  } else {
+    try {
+      await navigator.clipboard.writeText(texto);
+      mostrarToast(t.toastCopy);
+    } catch(e) {
+      const ta = document.createElement('textarea');
+      ta.value = texto;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      mostrarToast(t.toastCopy);
+    }
+  }
+}
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+let _toastTimer;
+function mostrarToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ════════════════════════════════════════
+   MODAL DE CONFIGURAÇÕES (MODO CUPIDO)
+════════════════════════════════════════ */
+const SETTINGS_KEY = 'amor-numeros-settings';
+
+function loadSettings() {
+  try {
+    const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+    if (settings) {
+      cupidModeEnabled = settings.cupidModeEnabled || false;
+      customPercentage = settings.customPercentage !== undefined ? settings.customPercentage : 50;
+    }
+  } catch (e) {
+    console.error("Failed to load settings from localStorage", e);
+  }
+}
+
+function saveSettings() {
+  cupidModeEnabled = document.getElementById('cupid-mode-toggle').checked;
+  let newPercentage = parseInt(document.getElementById('custom-percentage').value, 10);
+  if (isNaN(newPercentage) || newPercentage < 0) newPercentage = 0;
+  if (newPercentage > 100) newPercentage = 100;
+  customPercentage = newPercentage;
+
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+      cupidModeEnabled,
+      customPercentage
+    }));
+    mostrarToast(LANGS[currentLang].modal.toastSaved);
+  } catch (e) {
+    console.error("Failed to save settings to localStorage", e);
+  }
+  updateCupidModeIndicator();
+  closeSettingsModal();
+}
+
+function openSettingsModal() {
+  document.getElementById('cupid-mode-toggle').checked = cupidModeEnabled;
+  document.getElementById('custom-percentage').value = customPercentage;
+  document.getElementById('settings-modal-overlay').classList.add('visible');
+  somClique();
+}
+
+function closeSettingsModal(event) {
+  if (event && event.target.id !== 'settings-modal-overlay' && event.target.id !== 'modal-btn-cancel') {
+    return;
+  }
+  document.getElementById('settings-modal-overlay').classList.remove('visible');
+}
+
+function updateCupidModeIndicator() {
+  const indicator = document.getElementById('cupid-mode-indicator');
+  if (cupidModeEnabled) {
+    indicator.classList.add('active');
+  } else {
+    indicator.classList.remove('active');
+  }
+}
+
+/* ════════════════════════════════════════
+   RESET
+════════════════════════════════════════ */
+function resetar(silent = false) {
+  currentResult = null;
+  document.getElementById('loading-section').style.display  = 'none';
+  document.getElementById('result-section').style.display   = 'none';
+  document.getElementById('form-section').style.display     = 'block';
+  if (!silent) {
+    document.getElementById('name1').value = '';
+    document.getElementById('name2').value = '';
+    document.getElementById('name1').classList.remove('error');
+    document.getElementById('name2').classList.remove('error');
+    document.getElementById('name1').focus();
+  }
+}
+
+/* ════════════════════════════════════════
+   UTILITÁRIOS
+════════════════════════════════════════ */
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ════════════════════════════════════════
+   EVENTOS DE TECLADO
+════════════════════════════════════════ */
+['name1','name2'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') iniciarCalculo();
+  });
+});
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+loadSettings();
+setLang('pt');
+updateCupidModeIndicator();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("PWA ativo"))
+      .catch(err => console.log(err));
+  });
+}
+</script>
+</body>
+</html>
