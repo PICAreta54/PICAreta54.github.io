@@ -4,23 +4,15 @@
   "short_name": "Amor",
   "description": "Descubra a compatibilidade amorosa de forma rápida e divertida.",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#ff4d8d",
   "orientation": "portrait",
+  "lang": "pt-BR",
+  "dir": "ltr",
 
- "screenshots": [
-  {
-    "src": "screenshot-home.png",
-    "sizes": "1902x900",
-    "type": "image/png"
-  },
-  {
-    "src": "screenshot-resultado.png",
-    "sizes": "1895x901",
-    "type": "image/png"
-  }
-],
+  "categories": ["entertainment"],
 
   "icons": [
     {
@@ -32,6 +24,21 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "screenshot-home.png",
+      "sizes": "1902x900",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-resultado.png",
+      "sizes": "1895x901",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
 }
