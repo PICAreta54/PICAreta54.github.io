@@ -1,12 +1,22 @@
 {
+  "id": "/amor-em-numeros",
   "name": "Amor em Números",
   "short_name": "Amor",
-  "description": "Descubra a compatibilidade amorosa através de cálculos divertidos e rápidos.",
+  "description": "Descubra a compatibilidade amorosa de forma rápida e divertida.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#ff4d8d",
   "orientation": "portrait",
+
+  "screenshots": [
+    {
+      "src": "screenshot-home.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    }
+  ],
+
   "icons": [
     {
       "src": "icon-192.png",
