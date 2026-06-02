@@ -9,13 +9,18 @@
   "theme_color": "#ff4d8d",
   "orientation": "portrait",
 
-  "screenshots": [
-    {
-      "src": "screenshot-home.png",
-      "sizes": "1080x1920",
-      "type": "image/png"
-    }
-  ],
+ "screenshots": [
+  {
+    "src": "screenshot-home.png",
+    "sizes": "1080x1920",
+    "type": "image/png"
+  },
+  {
+    "src": "screenshot-resultado.png",
+    "sizes": "1080x1920",
+    "type": "image/png"
+  }
+],
 
   "icons": [
     {
