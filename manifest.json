@@ -1,6 +1,7 @@
 {
   "name": "Amor em Números",
   "short_name": "Amor",
+  "description": "Descubra a compatibilidade amorosa através de cálculos divertidos e rápidos.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",
